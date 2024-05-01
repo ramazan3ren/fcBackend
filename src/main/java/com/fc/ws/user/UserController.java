@@ -1,13 +1,13 @@
 package com.fc.ws.user;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fc.ws.error.ApiError;
 import com.fc.ws.shared.GenericMessage;
 import com.fc.ws.user.dto.UserCreate;
+import com.fc.ws.user.dto.UserDTO;
 
 import jakarta.validation.Valid;
 
@@ -27,48 +28,33 @@ public class UserController {
 
     @PostMapping("api/v1/users")
     GenericMessage createUser(@Valid @RequestBody UserCreate user) {
-
         userService.save(user.toUser());
         return new GenericMessage("Hesabınız Oluşturuldu : " + user.toUser().username);
     }
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    ResponseEntity<ApiError> handleMethodArgNotValidEx(MethodArgumentNotValidException exception) {
-        ApiError apiError = new ApiError();
-        apiError.setPath("/api/v1/users");
-        apiError.setMessage("Validation Error");
-        apiError.setStatus(400);
-        Map<String, String> validationErrors = new HashMap<>();
+    @PatchMapping("api/v1/users/{token}/active")
+    GenericMessage activateUser(@PathVariable String token) {
+        userService.activateUser(token);
+        return new GenericMessage("Hesabınız Aktif Edildi!");
+    }
 
-        for (var fieldError : exception.getBindingResult().getFieldErrors()) {
-            validationErrors.put(fieldError.getField(), fieldError.getDefaultMessage());
+    @GetMapping("api/v1/users")
+    Page<UserDTO> getUsers(Pageable page) {
+        return userService.getUsers(page).map(UserDTO::new);
+    }
+
+    @GetMapping("/api/v1/users/{username}")
+    public ResponseEntity<?> getUserByUsername(@PathVariable String username) {
+        User user = userService.getUser(username);
+        if (user == null) {
+            ApiError apiError = new ApiError();
+            apiError.setPath("/api/v1/users/" + username);
+            apiError.setMessage(username + " adlı kullanıcı bulunamadı.");
+            apiError.setStatus(HttpStatus.NOT_FOUND.value());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(apiError);
         }
-
-        apiError.setValidationErrors(validationErrors);
-        return ResponseEntity.badRequest().body(apiError);
+        return ResponseEntity.ok(new UserDTO(user));
     }
 
-    @ExceptionHandler(NotUniqueEmailException.class)
-    ResponseEntity<ApiError> handleNotUniqueEmailEx(NotUniqueEmailException exception) {
-        ApiError apiError = new ApiError();
-        apiError.setPath("/api/v1/users");
-        apiError.setMessage("Validation Error");
-        apiError.setStatus(400);
-        Map<String, String> validationErrors = new HashMap<>();
-        validationErrors.put("email", "Bu e-posta adresi kullanımda.");
-        apiError.setValidationErrors(validationErrors);
-        return ResponseEntity.badRequest().body(apiError);
-    }
 
-    @ExceptionHandler(NotUniqueUsernameException.class)
-    ResponseEntity<ApiError> handleNotUniqueUsernameEx(NotUniqueUsernameException exception) {
-        ApiError apiError = new ApiError();
-        apiError.setPath("/api/v1/users");
-        apiError.setMessage("Validation Error");
-        apiError.setStatus(400);
-        Map<String, String> validationErrors = new HashMap<>();
-        validationErrors.put("username", "Bu kullanıcı adı maalesef kayıtlı.");
-        apiError.setValidationErrors(validationErrors);
-        return ResponseEntity.badRequest().body(apiError);
-    }
 }
