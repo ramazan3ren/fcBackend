@@ -1,17 +1,17 @@
-package com.fc.ws.auth.token;
+package com.fc.ws.facilityauth.token;
 
 import java.util.Base64;
 
 import org.springframework.stereotype.Service;
 
-import com.fc.ws.auth.dto.Credentials;
-import com.fc.ws.user.User;
+import com.fc.ws.facility.Facility;
+import com.fc.ws.facilityauth.dto.Credentials;
 
-@Service("userTokenService")
+@Service("facilityTokenService")
 public class BasicAuthTokenService implements TokenService {
 
     @Override
-    public Token creaToken(User user, Credentials creds) {
+    public Token creaToken(Facility facility, Credentials creds) {
 
         String emailColonPassword = creds.email() + ":" + creds.password();
 
@@ -21,7 +21,7 @@ public class BasicAuthTokenService implements TokenService {
     }
 
     @Override
-    public User veriyToken(String authorizationHeader) {
+    public Facility veriyToken(String authorizationHeader) {
 
         throw new UnsupportedOperationException("Unimplemented method 'veriyToken'");
     }

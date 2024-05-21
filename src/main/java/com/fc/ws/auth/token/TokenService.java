@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import com.fc.ws.auth.dto.Credentials;
 import com.fc.ws.user.User;
 
-@Service
+@Service("userTokenService")
 public interface TokenService {
 
     public Token creaToken(User user, Credentials creds);

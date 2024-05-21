@@ -8,6 +8,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.fc.ws.facility.Facility;
+import com.fc.ws.facility.FacilityRepository;
 import com.fc.ws.user.User;
 import com.fc.ws.user.UserRepository;
 
@@ -32,6 +34,22 @@ public class WsApplication {
 				user.setImage(null);
 				user.setActive(true);
 				userRepository.save(user);
+
+			}
+		};
+	}
+
+	@Bean
+	CommandLineRunner facilityCreator(FacilityRepository facilityRepository) {
+		PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+		return (args) -> {
+			for (var i = 1; i <= 25; i++) {
+				Facility facility = new Facility();
+				facility.setEmail("facility" + i + "@mail.com");
+				facility.setPassword(passwordEncoder.encode("P4ssword"));
+				facility.setImage(null);
+				facility.setActive(true);
+				facilityRepository.save(facility);
 
 			}
 		};

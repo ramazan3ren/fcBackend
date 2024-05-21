@@ -1,5 +1,7 @@
 package com.fc.ws.user.dto;
 
+import com.fc.ws.squad.Squad;
+import com.fc.ws.team.Team;
 import com.fc.ws.user.User;
 
 public class UserDTO {
@@ -15,6 +17,10 @@ public class UserDTO {
 
     String lastname;
 
+    Team team;
+
+    Squad squad;
+
     public UserDTO(User user) {
         setId(user.getId());
         setUsername(user.getUsername());
@@ -22,6 +28,25 @@ public class UserDTO {
         setImage(user.getImage());
         setFirstname(user.getFirstName());
         setLastname(user.getLastName());
+        setTeam(user.getTeam());
+        setSquad(user.getSquad());
+
+    }
+
+    public Team getTeam() {
+        return team;
+    }
+
+    public void setTeam(Team team) {
+        this.team = team;
+    }
+
+    public Squad getSquad() {
+        return squad;
+    }
+
+    public void setSquad(Squad squad) {
+        this.squad = squad;
     }
 
     public String getLastname() {
@@ -71,4 +96,5 @@ public class UserDTO {
     public void setId(long id) {
         this.id = id;
     }
+
 }

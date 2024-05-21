@@ -1,5 +1,6 @@
 package com.fc.ws.user;
 
+
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,6 +69,7 @@ public class UserService {
     public Page<User> getUsers(Pageable page) {
         return userRepository.findAll(page);
     }
+
 
     public User getUser(String username) {
         return userRepository.findByUsername(username);
