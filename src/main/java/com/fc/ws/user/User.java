@@ -40,10 +40,9 @@ public class User {
 
     String lastName;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "team_id")
-
-    Team team;
+    @ManyToOne
+    @JoinColumn(name = "teams_id")
+    private Team team;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "squad_id")

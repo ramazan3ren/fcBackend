@@ -2,7 +2,8 @@ package com.fc.ws.team;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
+import java.util.UUID;  
+import jakarta.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -39,10 +40,9 @@ public class Team {
     @Column(length = 500)
     String teamImage;
 
-    @OneToMany(fetch = FetchType.EAGER)
-    List<User> members = new ArrayList<>();
 
-
+    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private  List<User> members = new ArrayList<>();
 
     public Team() {
     }

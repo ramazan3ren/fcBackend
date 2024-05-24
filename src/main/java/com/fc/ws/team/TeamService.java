@@ -33,7 +33,14 @@ public class TeamService {
             if (user != null) {
                 team.addMember(user);
             } else {
-
+                User newUser = new User();
+				newUser.setUsername(username);
+				newUser.setEmail("");
+				newUser.setFirstName(username);
+				newUser.setLastName(username);
+				newUser.setImage(null);
+				newUser.setActive(true);
+                team.addMember(newUser);
             }
         }
 

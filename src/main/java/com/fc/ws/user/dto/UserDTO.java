@@ -17,7 +17,8 @@ public class UserDTO {
 
     String lastname;
 
-    Team team;
+
+    private Team team;
 
     Squad squad;
 
