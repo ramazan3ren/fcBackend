@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fc.ws.team.Team;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -35,24 +36,25 @@ public class Match {
 
     String matchTime;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "home_team_id")
     Team homeTeam;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "away_team_id")
     Team awayTeam;
 
     public Match() {
     }
 
-    public Match(String matchCreatorUsername, String city, String district, String facilityName, String matchTime) {
+    public Match(String matchCreatorUsername, String city, String district, String facilityName, String matchTime, Team homeTeam, Team awayTeam) {
         this.matchCreatorUsername = matchCreatorUsername;
         this.city = city;
         this.district = district;
         this.facilityName = facilityName;
         this.matchTime = matchTime;
-
+        this.setHomeTeam(homeTeam);
+        this.setAwayTeam(awayTeam);
     }
 
     public String generateToken() {
@@ -127,7 +129,7 @@ public class Match {
         return awayTeam;
     }
 
-    public void setAwayTeam(Team list) {
-        this.awayTeam = list;
+    public void setAwayTeam(Team team) {
+        this.awayTeam = team;
     }
 }

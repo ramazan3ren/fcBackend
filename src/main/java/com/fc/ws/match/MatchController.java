@@ -27,9 +27,9 @@ public class MatchController {
     MatchRepository matchRepository;
 
     @PostMapping("api/v1/matches")
-    public ResponseEntity<Match> createMatch(@RequestBody Match matchDTO) {
+    public ResponseEntity<Match> createMatch(@RequestBody MatchDTO matchDTO) {
         Match match = matchService.createMatch(matchDTO.getMatchCreatorUsername(), matchDTO.getCity(),
-                matchDTO.getDistrict(), matchDTO.getFacilityName(), matchDTO.getMatchTime());
+                matchDTO.getDistrict(), matchDTO.getFacilityName(), matchDTO.getMatchTime(), matchDTO.getHomeTeamId(), matchDTO.getAwayTeamId());
         return ResponseEntity.status(HttpStatus.CREATED).body(match);
     }
 
@@ -39,21 +39,15 @@ public class MatchController {
         return matchService.getMatches(page);
     }
 
-    @GetMapping("api/v1/matches/{token}")
-    public ResponseEntity<Match> getMatchByToken(@PathVariable String token) {
-        Match match = matchService.getMatchByToken(token);
+
+    @GetMapping("api/v1/matches/{id}")
+    public ResponseEntity<Match> getMatchById(@PathVariable Long id) {
+        Match match = matchService.getMatchById(id);
         return ResponseEntity.ok(match);
 
     }
 
-    @PutMapping("api/v1/matches/{token}")
-    public ResponseEntity<Match> updateMatch(@PathVariable String token, @RequestBody MatchDTO matchDTO) {
-        Match updatedMatch = matchService.updateMatch(token, matchDTO.getMatchCreatorUsername(), matchDTO.getCity(),
-                matchDTO.getDistrict(),
-                matchDTO.getFacilityName(), matchDTO.getMatchTime(), matchDTO.getHomeTeam(),
-                matchDTO.getAwayTeam());
-        return ResponseEntity.ok(updatedMatch);
-    }
+  
 
     @DeleteMapping("api/v1/matches/{id}")
     public ResponseEntity<Void> deleteMatch(@PathVariable String token) {

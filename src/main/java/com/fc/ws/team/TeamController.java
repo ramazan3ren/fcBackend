@@ -1,5 +1,7 @@
 package com.fc.ws.team;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -10,10 +12,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fc.ws.team.dto.TeamDTO;
-import com.fc.ws.user.User;
 
 @RestController
 public class TeamController {
@@ -22,9 +24,8 @@ public class TeamController {
     TeamService teamService;
 
     @PostMapping("api/v1/teams")
-    public ResponseEntity<Team> createTeam(@RequestBody TeamDTO teamDTO) {
-        Team team = teamService.createTeam(teamDTO.getTeamName(), teamDTO.getTeamDesc(), teamDTO.getTeamImage(),
-                teamDTO.getMembers(), teamDTO.getTeamFounder());
+    public ResponseEntity<Team> createTeam(@RequestBody TeamDTO teamDTO, @RequestHeader("email") String userEmail) {
+        Team team = teamService.createTeam(teamDTO.getTeamName(), teamDTO.getTeamImage(), userEmail);
         return ResponseEntity.status(HttpStatus.CREATED).body(team);
 
     }
@@ -35,28 +36,16 @@ public class TeamController {
 
     }
 
-    @GetMapping("api/v1/teams/{teamID}")
-    public ResponseEntity<Team> getTeamByTeamID(@PathVariable String teamID, TeamDTO teamDTO) {
-        Team team = teamService.getTeam(teamID);
-        return ResponseEntity.ok().body(team);
+    @PostMapping("api/v1/teams/{id}/join")
+    boolean joinTeam(@PathVariable Long id, @RequestHeader("email") String userEmail) {
+        return teamService.joinTeam(id,userEmail);
 
     }
 
-    @PutMapping(path = "api/v1/teams/{teamID}/jointeam")
-    public ResponseEntity<Team> addUserToTeam(@PathVariable String teamID, @RequestBody(required = true) User username)
-            throws Exception {
-        Team team = teamService.updateTeamMembers(teamID, username.getUsername());
+    @GetMapping("api/v1/teams/{id}")
+    public ResponseEntity<Optional<Team>> getTeamByTeamID(@PathVariable Long id, TeamDTO teamDTO) {
+        Optional<Team> team = teamService.getTeam(id);
         return ResponseEntity.ok().body(team);
 
     }
-
-    @PutMapping(path = "api/v1/teams/{teamID}/leaveteam")
-    public ResponseEntity<Team> removeUserToTeam(@PathVariable String teamID,
-            @RequestBody(required = true) User username)
-            throws Exception {
-        Team team = teamService.removeTeamMembers(teamID, username.getUsername());
-        return ResponseEntity.ok().body(team);
-
-    }
-
 }

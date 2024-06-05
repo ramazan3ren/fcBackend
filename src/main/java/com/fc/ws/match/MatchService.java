@@ -9,17 +9,23 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fc.ws.team.Team;
+import com.fc.ws.team.TeamRepository;
 
 @Service
 public class MatchService {
 
     @Autowired
     MatchRepository matchRepository;
+    @Autowired
+    TeamRepository teamRepository;
 
     @Transactional
     public Match createMatch(String matchCreatorUsername, String city, String district,
-            String facilityName, String matchTime) {
-        Match match = new Match(matchCreatorUsername, city, district, facilityName, matchTime);
+            String facilityName, String matchTime, Long homeTeamId, Long awayTeamId) {
+
+        Team home = teamRepository.findById(homeTeamId).orElseThrow(RuntimeException::new);
+        Team away = teamRepository.findById(awayTeamId).orElseThrow(RuntimeException::new);
+        Match match = new Match(matchCreatorUsername, city, district, facilityName, matchTime, home, away);
         match.setToken(match.generateToken()); 
         return matchRepository.save(match);
     }
@@ -51,8 +57,8 @@ public class MatchService {
         matchRepository.delete(match);
     }
 
-    public Match getMatchByToken(String token) {
-        Match match = matchRepository.findMatchByToken(token);
+    public Match getMatchById(Long id) {
+        Match match = matchRepository.findById(id).orElseThrow(RuntimeException::new);
         return match;
     }
 

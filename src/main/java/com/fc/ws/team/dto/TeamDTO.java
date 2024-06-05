@@ -1,7 +1,5 @@
 package com.fc.ws.team.dto;
 
-import java.util.List;
-
 public class TeamDTO {
 
     String teamName;
@@ -10,19 +8,6 @@ public class TeamDTO {
 
     String teamImage;
 
-    String teamDesc;
-
-    String teamFounder;
-
-    List<String> members;
-
-    public String getTeamFounder() {
-        return teamFounder;
-    }
-
-    public void setTeamFounder(String teamFounder) {
-        this.teamFounder = teamFounder;
-    }
 
     public String getTeamName() {
         return teamName;
@@ -48,19 +33,4 @@ public class TeamDTO {
         this.teamImage = teamImage;
     }
 
-    public String getTeamDesc() {
-        return teamDesc;
-    }
-
-    public void setTeamDesc(String teamDesc) {
-        this.teamDesc = teamDesc;
-    }
-
-    public List<String> getMembers() {
-        return members;
-    }
-
-    public void setMembers(List<String> members) {
-        this.members = members;
-    }
 }

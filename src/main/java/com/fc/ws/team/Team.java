@@ -30,57 +30,22 @@ public class Team {
     @Column(nullable = false, length = 100)
     String teamName;
 
-    @Column(length = 300)
-    String teamDesc;
-
-    String teamFounder;
-
-    String teamID;
-
     @Column(length = 500)
     String teamImage;
 
 
     @OneToMany(mappedBy = "team", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private  List<User> members = new ArrayList<>();
+    private  List<User> users = new ArrayList<>();
 
     public Team() {
     }
 
-    public Team(String teamName, String teamDesc, String teamImage, String teamFounder) {
+    public Team(String teamName, String teamImage) {
         this.teamName = teamName;
-        this.teamDesc = teamDesc;
         this.teamImage = teamImage;
-        this.teamID = UUID.randomUUID().toString();
-        this.teamFounder = teamFounder;
-
+    
     }
 
-    public String getTeamFounder() {
-        return teamFounder;
-    }
-
-    public void setTeamFounder(String teamFounder) {
-        this.teamFounder = teamFounder;
-    }
-
-    public void addMember(User user) {
-        this.members.add(user);
-        user.setTeam(this);
-    }
-
-    public void removeMember(User user) {
-        this.members.remove(user);
-        user.setTeam(null);
-    }
-
-    public String getTeamID() {
-        return teamID;
-    }
-
-    public void setTeamID(String teamID) {
-        this.teamID = teamID;
-    }
 
     public Long getId() {
         return id;
@@ -98,13 +63,6 @@ public class Team {
         this.teamName = teamName;
     }
 
-    public String getTeamDesc() {
-        return teamDesc;
-    }
-
-    public void setTeamDesc(String teamDesc) {
-        this.teamDesc = teamDesc;
-    }
 
     public String getTeamImage() {
         return teamImage;
@@ -114,11 +72,11 @@ public class Team {
         this.teamImage = teamImage;
     }
 
-    public List<User> getMembers() {
-        return members;
+    public List<User> getUsers() {
+        return users;
     }
 
-    public void setMembers(List<User> members) {
-        this.members = members;
+    public void setUsers(List<User> users) {
+        this.users = users;
     }
 }

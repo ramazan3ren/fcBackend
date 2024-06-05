@@ -1,5 +1,7 @@
 package com.fc.ws.user;
 
+import java.util.Optional;
+
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fc.ws.squad.Squad;
